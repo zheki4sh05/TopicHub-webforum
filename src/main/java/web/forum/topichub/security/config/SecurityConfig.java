@@ -3,7 +3,6 @@ package web.forum.topichub.security.config;
 
 import lombok.*;
 import org.springframework.context.annotation.*;
-import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.*;
 import org.springframework.security.config.annotation.authentication.configuration.*;
@@ -55,11 +54,11 @@ public class SecurityConfig{
                  .authenticationProvider(authenticationProvider(userDetailsService))
                  .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, JwtCookieAuthenticationFilter.class)
-                .exceptionHandling(
-                        e->e.accessDeniedHandler(
-                                        (request, response, accessDeniedException)->response.setStatus(401)
-                                )
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+//                .exceptionHandling(
+//                        e->e.accessDeniedHandler(
+//                                        (request, response, accessDeniedException)->response.setStatus(401)
+//                                )
+//                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .logout(l->l
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)

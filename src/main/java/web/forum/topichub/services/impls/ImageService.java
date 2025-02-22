@@ -2,47 +2,80 @@ package web.forum.topichub.services.impls;
 
 import lombok.*;
 import lombok.extern.slf4j.*;
+import org.springframework.core.io.*;
 import org.springframework.http.*;
-import org.springframework.http.client.*;
 import org.springframework.stereotype.*;
+import org.springframework.util.*;
+import org.springframework.web.client.*;
 import org.springframework.web.multipart.*;
-import org.springframework.web.reactive.function.*;
-import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.*;
 import web.forum.topichub.dto.client.*;
+import web.forum.topichub.model.*;
 import web.forum.topichub.repository.*;
 import web.forum.topichub.services.interfaces.*;
 import web.forum.topichub.util.*;
 
 import java.io.*;
+import java.util.*;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class ImageService implements IImageService {
 
-    private final UserRepository authDao;
     private final HttpRequestUtils httpRequestUtils;
+    private final UserDataRepository userDataRepository;
+
 
     @Override
-    public byte[] fetch(String userId) {
-//            return fileStorage.findByPath(userId).orElseThrow(InternalServerErrorException::new);
-        return null;
+    public byte[] fetch(String imageId) {
+        RestClient restClient = RestClient.create();
+       ResponseEntity<ByteArrayResource> imageDtoResponseEntity =  restClient
+                .get()
+                .uri(httpRequestUtils.getImageServiceUri(imageId))
+                .retrieve()
+                .toEntity(ByteArrayResource.class);
+        return imageDtoResponseEntity.getBody().getByteArray();
 
     }
 
     @Override
-    public void save(String userId, MultipartFile fileContent) throws IOException {
-        MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("file", fileContent.getResource());
-            Flux<ImageDto> imageFlux = WebClient.create()
-                    .post()
-                    .uri(httpRequestUtils.getImageServiceUtl())
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData(builder.build()))
-                    .retrieve()
-                    .bodyToFlux(ImageDto.class);
-            imageFlux.subscribe(imageDto -> log.info(imageDto.getFilename()));
+    public ImageDto save(MultipartFile fileContent) throws IOException {
+        RestClient restClient = RestClient.create();
+
+        byte[] bytes = fileContent.getBytes();
+        ByteArrayResource byteArrayResource = new ByteArrayResource(bytes){
+            @Override
+            public String getFilename(){
+                return fileContent.getOriginalFilename();
+            }
+        };
+
+        MultiValueMap<String, Object> map  = new LinkedMultiValueMap<>();
+        map.add("file", byteArrayResource);
+       ResponseEntity<ImageDto> imageDtoResponseEntity = restClient
+                .post()
+                .uri(httpRequestUtils.getImageServiceUri())
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(map)
+                .retrieve()
+                .toEntity(ImageDto.class);
+
+        return imageDtoResponseEntity.getBody();
 
         }
+
+
+
+    @Override
+    public void delete(String imageId) {
+        RestClient restClient = RestClient.create();
+         restClient
+                .get()
+                .uri(httpRequestUtils.getImageServiceUri(imageId))
+                .retrieve()
+                .toEntity(String.class);
+
+
+    }
+
 }

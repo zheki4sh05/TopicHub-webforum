@@ -34,10 +34,21 @@ public class ImageController {
      * @see IImageService#fetch(String)
      */
     @GetMapping("")
-    public ResponseEntity<?> getImage(@RequestParam("id") @NotNull String userId) {
-        byte[] imageData = imageService.fetch(userId);
+    public ResponseEntity<?> getLogo(
+            @RequestParam("id") @NotNull String imageId
+    ) {
+        byte[] imageData = imageService.fetch(imageId);
         Resource resource = new ByteArrayResource(imageData);
         return new ResponseEntity<>(resource, HttpStatus.OK);
+
     }
+
+//    @GetMapping("/article")
+//    public ResponseEntity<?> getArticleImage(@RequestParam("id") @NotNull String imageId) {
+//        byte[] imageData = imageService.fetch(imageId);
+//        Resource resource = new ByteArrayResource(imageData);
+//        return new ResponseEntity<>(resource, HttpStatus.OK);
+//    }
+
 }
 

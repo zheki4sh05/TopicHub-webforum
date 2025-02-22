@@ -1,6 +1,8 @@
 package web.forum.topichub.security.util;
 
 public class PublicPath {
+
+    private PublicPath(){};
     public static final String[] LIST = new String[]{
             "/auth",
             "/api/v1/auth/**",

@@ -129,6 +129,17 @@ public class ArticleService implements IArticleService {
         return articleViewRepository.getStatus(id);
     }
 
+    @Override
+    public void createArticle(Long articleId, String id) {
+      var article = articleRepo.findByIdAndAuthor(articleId, UUID.fromString(id))
+                .map(item->{
+                    item.setStatus(StatusDto.MODERATION.name());
+                    return item;
+                })
+                .orElseThrow(EntityNotFoundException::new);
+        articleRepo.save(article);
+    }
+
     private void checkLike(String userId, PageResponse<Article> pageResponse){
         if(userId!=null){
             pageResponse.getItems().forEach(item->item.setState(

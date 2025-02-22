@@ -17,6 +17,10 @@ public class HttpRequestUtils {
     @Value("${client.port}")
     private String port;
 
+    @Value("${service.image.uri}")
+    private String imageServiceUrl;
+
+
     public HttpRequestUtils() {
     }
 
@@ -68,7 +72,12 @@ public class HttpRequestUtils {
         return false;
     }
 
-    public String getImageServiceUtl() {
-        return "";
+    public String getImageServiceUri() {
+        return imageServiceUrl;
+    }
+
+
+    public String getImageServiceUri(String id) {
+        return imageServiceUrl+"?imageId="+id;
     }
 }

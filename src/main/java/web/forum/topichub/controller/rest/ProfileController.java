@@ -9,6 +9,8 @@ import web.forum.topichub.exceptions.*;
 import web.forum.topichub.security.util.*;
 import web.forum.topichub.services.interfaces.*;
 
+import java.io.*;
+
 
 /**
  * REST Controller for managing user profiles.
@@ -29,6 +31,7 @@ public class ProfileController {
     private final IAuthorService authService;
     private final IImageService imageService;
     private final CustomSecurityExpression customSecurityExpression;
+    private final IAuthorService authorService;
 
 
     @GetMapping("/search")
@@ -132,6 +135,21 @@ public class ProfileController {
         authService.updateUser(userDto, userId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
+
+    @PostMapping("/logo")
+    public ResponseEntity<?> updateLogo(
+            @ModelAttribute UploadImageDto uploadImageDto
+    ) {
+        String userId = customSecurityExpression.getUserId();
+
+        try  {
+            var result = authorService.updateImage(userId, uploadImageDto.getFile());
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     /**
      * Uploads a profile image for the user.

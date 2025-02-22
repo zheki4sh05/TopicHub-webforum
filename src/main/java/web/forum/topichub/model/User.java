@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "logo_id")
+    private String logoId;
+
     @ToString.Exclude
     @Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

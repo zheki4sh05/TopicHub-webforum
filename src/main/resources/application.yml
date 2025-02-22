@@ -1,6 +1,11 @@
 server:
   port: 8080
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 50MB
+      max-file-size: 40MB
   devtools:
     livereload:
       enabled: true
@@ -33,6 +38,12 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      auto-startup: false
+    streams:
+      auto-startup: false
 application:
   security:
     jwt:
@@ -50,9 +61,6 @@ client:
     ${CLIENT_HOST}
   port:
     ${CLIENT_PORT}
-
-minio:
-  url: ${MN_URL}
-  access-key: ${MN_LOGIN}
-  secret-key: ${MN_PASS}
-  bucket: ${MN_BUCKET}
+service:
+  image:
+      uri: http://localhost:8082/api/v1/image

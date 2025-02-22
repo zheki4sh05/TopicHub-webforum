@@ -3,9 +3,12 @@ package web.forum.topichub.controller.rest;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.security.util.*;
 import web.forum.topichub.services.interfaces.*;
+
+import java.io.*;
 
 /**
  * REST Controller for managing sandbox articles.
@@ -21,17 +24,8 @@ import web.forum.topichub.services.interfaces.*;
 public class SandboxController {
     private final IArticleService articleService;
     private final CustomSecurityExpression customSecurityExpression;
+    private final ISandboxService sandboxService;
 
-    /**
-     * Creates a new article in the sandbox.
-     *
-     * <p>This endpoint allows users to create a new article in the sandbox. It takes an article DTO as input,
-     * associates it with the current user's ID, and calls the service to create the article.
-     *
-     * @param newArticle the DTO containing the article's details to be created.
-     * @return a ResponseEntity with a 201 CREATED status.
-     * @see ArticleDto
-     */
     @PostMapping("")
     public ResponseEntity<?> doPost(
             @RequestBody ArticleDto newArticle
@@ -41,16 +35,15 @@ public class SandboxController {
         return new ResponseEntity<>("", HttpStatus.CREATED);
     }
 
-    /**
-     * Updates an existing article in the sandbox.
-     *
-     * <p>This endpoint allows users to update an article in the sandbox. It takes an article DTO as input,
-     * associates it with the current user's ID, and calls the service to update the article.
-     *
-     * @param articleDto the DTO containing the updated article details.
-     * @return a ResponseEntity with a 200 OK status.
-     * @see ArticleDto
-     */
+    @PostMapping("/create")
+    public ResponseEntity<?> createArticle(
+            @RequestParam("articleId") Long articleId
+    ){
+        String id = customSecurityExpression.getUserId();
+        articleService.createArticle(articleId, id);
+        return new ResponseEntity<>("", HttpStatus.CREATED);
+    }
+
     @PutMapping("")
     public ResponseEntity<?> doPut(
             @RequestBody ArticleDto articleDto
@@ -59,5 +52,57 @@ public class SandboxController {
         articleService.update(articleDto, id);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
+
+    @PostMapping("/article")
+    public ResponseEntity<?> createTemplate(
+            @RequestBody ArticleDto articleDto
+    ){
+        String id = customSecurityExpression.getUserId();
+       String savedId =  sandboxService.createSandbox(articleDto, id);
+        return new ResponseEntity<>(savedId, HttpStatus.OK);
+    }
+    @DeleteMapping("/article")
+    public  ResponseEntity<?> deleteArticle(
+            @RequestParam("articleId") String articleId
+    ){
+        String id = customSecurityExpression.getUserId();
+        sandboxService.deleteSandbox(articleId,id);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/part")
+    public ResponseEntity<?> createPart(
+            @RequestBody ArticlePartDto articlePartDto
+    ){
+        String id = customSecurityExpression.getUserId();
+        String savedId =  sandboxService.createArticlePart(articlePartDto, id);
+        return new ResponseEntity<>(savedId, HttpStatus.OK);
+    }
+    @PostMapping("/image")
+    public ResponseEntity<?> uploadImage(
+            @RequestPart("file") MultipartFile multipartFile
+            ){
+        String id = customSecurityExpression.getUserId();
+        String imageId = null;
+        try {
+            imageId = sandboxService.uploadImage(multipartFile,id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(imageId, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/part")
+    public  ResponseEntity<?> deletePart(
+            @RequestParam("articleId") String articleId,
+            @RequestParam("partId") String partId
+    ){
+        String id = customSecurityExpression.getUserId();
+        sandboxService.deletePart(articleId,partId,id);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
 }
 

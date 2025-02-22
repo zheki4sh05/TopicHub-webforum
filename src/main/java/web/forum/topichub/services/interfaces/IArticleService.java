@@ -13,6 +13,7 @@ public interface IArticleService {
     void update(ArticleStatusDto articleStatusDto);
 
     ArticleDto findById(String id);
-
     String getStatusNameById(String id);
+
+    void createArticle(Long articleId, String id);
 }

@@ -33,7 +33,7 @@ public interface ArticleMapper{
             @Mapping(target = "keyWords", expression = "java(String.join(\"\\\\|\", articleDto.getKeyWords()))"),
             @Mapping(target = "created", expression = "java(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()))"),
             @Mapping(target = "author", ignore = true),
-            @Mapping(target = "status", expression = "java(web.forum.topichub.dto.StatusDto.MODERATION.name())"),
+            @Mapping(target = "status", expression = "java(web.forum.topichub.dto.StatusDto.SANDBOX.name())"),
             @Mapping(target = "hub", ignore = true)
     })
     ArticleEntity fromDto(ArticleDto articleDto);

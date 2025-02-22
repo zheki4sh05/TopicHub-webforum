@@ -5,13 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
+import org.springframework.web.multipart.*;
 import web.forum.topichub.dto.*;
+import web.forum.topichub.dto.client.*;
 import web.forum.topichub.exceptions.*;
 import web.forum.topichub.mapper.*;
 import web.forum.topichub.model.*;
 import web.forum.topichub.repository.*;
 import web.forum.topichub.services.interfaces.*;
 
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -21,6 +24,7 @@ public class AuthService implements IAuthorService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
+    private final IImageService imageService;
     @Override
     public void updateUser(UserDto userDto, String userId) {
         try{
@@ -78,6 +82,18 @@ public class AuthService implements IAuthorService {
         }else{
             return PageResponse.map(userMapper::toAuthor, userList);
         }
+    }
+
+    @Override
+    public ImageDto updateImage(String userId, MultipartFile multipartFile) throws IOException {
+        ImageDto imageDto =   imageService.save(multipartFile);
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow();
+        if(user.getLogoId()!=null){
+            imageService.delete(user.getLogoId());
+        }
+        user.setLogoId(imageDto.getId());
+        userRepository.save(user);
+        return imageDto;
     }
 
 

@@ -57,7 +57,7 @@ public class ExceptionControllerAdvice {
 
     private ResponseEntity<ErrorDto> createResponse(String errorKey, HttpStatus httpStatus,WebRequest request ){
         return new ResponseEntity<>(createErrorDto(
-                i18nUtil.getMessage(errorKey, request, null),
+               " i18nUtil.getMessage(errorKey, request, null)",
                 httpStatus
         ), httpStatus);
     }
