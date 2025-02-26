@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.core.io.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import web.forum.topichub.dto.*;
+import web.forum.topichub.dto.client.*;
 import web.forum.topichub.services.interfaces.*;
 
 
@@ -23,16 +25,6 @@ public class ImageController {
 
     private final IImageService imageService;
 
-    /**
-     * Retrieves the image for the specified user.
-     *
-     * <p>This endpoint allows users to retrieve the image associated with a specific user.
-     * The user ID is provided as a request parameter, and the image data is returned as a byte array.
-     *
-     * @param userId the ID of the user whose image is to be fetched.
-     * @return a ResponseEntity containing the image data as a resource and a 200 OK status.
-     * @see IImageService#fetch(String)
-     */
     @GetMapping("")
     public ResponseEntity<?> getLogo(
             @RequestParam("id") @NotNull String imageId
@@ -40,7 +32,17 @@ public class ImageController {
         byte[] imageData = imageService.fetch(imageId);
         Resource resource = new ByteArrayResource(imageData);
         return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
 
+
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam("name") String value,
+            @RequestParam(value = "page",defaultValue = "1",required = false) Integer page
+    ){
+        PageResponse<ImageDto> imageDtoPageResponse = imageService.search(value,page);
+        return new ResponseEntity<>(imageDtoPageResponse, HttpStatus.OK);
     }
 
 //    @GetMapping("/article")

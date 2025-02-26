@@ -73,4 +73,12 @@ public class ArticleController {
         return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<?> find(
+            @RequestParam("articleId") String articleId
+    ){
+        ArticleDto articleDto = articleService.findById(articleId);
+        return new ResponseEntity<>(articleDto, HttpStatus.OK);
+    }
+
 }

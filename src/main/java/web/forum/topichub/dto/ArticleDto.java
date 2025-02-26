@@ -1,5 +1,6 @@
 package web.forum.topichub.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.sql.*;
@@ -12,6 +13,7 @@ import java.util.*;
 @Setter
 public class ArticleDto {
 
+    @NotNull
     private Long id;
     private String theme;
     private List<String> keyWords;
@@ -19,7 +21,7 @@ public class ArticleDto {
     private Integer likes;
     private Integer dislikes;
     private Timestamp created;
-
+    private String previewId;
     public Integer getHub() {
         return hub==null ? 0 : hub;
     }

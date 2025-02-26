@@ -34,6 +34,9 @@ public class Article {
     @Column(name = "keywords")
     private String keyWords;
 
+    @Column(name = "preview_id")
+    private String previewId;
+
     @Column(name = "status")
     private String status;
 

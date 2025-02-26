@@ -86,7 +86,7 @@ public class AuthService implements IAuthorService {
 
     @Override
     public ImageDto updateImage(String userId, MultipartFile multipartFile) throws IOException {
-        ImageDto imageDto =   imageService.save(multipartFile);
+        ImageDto imageDto =   imageService.save(multipartFile, userId, "logo");
         User user = userRepository.findById(UUID.fromString(userId)).orElseThrow();
         if(user.getLogoId()!=null){
             imageService.delete(user.getLogoId());

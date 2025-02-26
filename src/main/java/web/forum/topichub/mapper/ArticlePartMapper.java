@@ -22,7 +22,7 @@ public interface ArticlePartMapper {
             @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())"),
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "value", source = "value"),
-            @Mapping(target = "name", source = "value"),
+            @Mapping(target = "name", source = "name"),
             @Mapping(target = "type", source = "type"),
             @Mapping(target = "created", source = "created"),
             @Mapping(target = "article", ignore = true),

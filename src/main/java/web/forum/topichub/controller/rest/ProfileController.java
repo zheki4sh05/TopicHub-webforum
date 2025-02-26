@@ -29,7 +29,6 @@ import java.io.*;
 public class ProfileController {
     private final IArticleService articleService;
     private final IAuthorService authService;
-    private final IImageService imageService;
     private final CustomSecurityExpression customSecurityExpression;
     private final IAuthorService authorService;
 

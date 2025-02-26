@@ -28,4 +28,13 @@ where ae.id = :articleId and ae.author.uuid = :id
 
 """)
     Optional<ArticleEntity> findByIdAndAuthor(Long articleId, UUID id);
+
+    @Query("""
+
+delete 
+from ArticleEntity ae 
+where ae.id = :aLong and ae.author.uuid = :userId
+
+""")
+    void deleteByIdAndArticleId(@Param("aLong") Long aLong,@Param("userId") UUID id);
 }

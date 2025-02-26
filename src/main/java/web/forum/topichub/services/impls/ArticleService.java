@@ -48,6 +48,14 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
+    @Transactional
+    public Long publish(ArticleDto articleDto, String id) {
+        ArticleEntity articleEntity = articleRepo.findById(articleDto.getId()).orElseThrow(EntityNotFoundException::new);
+        articleEntity.setStatus(StatusDto.MODERATION.name());
+        return articleDto.getId();
+    }
+
+    @Override
     public void delete(String id, String userId) {
         var article = articleRepo.findById(Long.parseLong(id)).orElseThrow(EntityNotFoundException::new);
         if(article.getAuthor().getUuid().toString().equals(userId)){
@@ -101,9 +109,11 @@ public class ArticleService implements IArticleService {
     @Override
     @Transactional
     public void update(ArticleDto updatedArticle, String id) {
-        var delArticle = articleRepo.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
-        articleRepo.delete(delArticle);
-        create(updatedArticle, id);
+        List<Hub> hubList = hubDao.findAll();
+        var updateEntity = articleRepo.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
+     updateEntity.setKeyWords(articleMapper.joinWords(updatedArticle.getKeyWords()));
+     updateEntity.setTheme(updatedArticle.getTheme());
+     updateEntity.setHub(hubList.stream().filter(item->item.getId().equals(updatedArticle.getHub())).findFirst().orElseThrow(EntityNotFoundException::new));
     }
 
 

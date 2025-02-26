@@ -6,13 +6,21 @@ import web.forum.topichub.dto.*;
 import java.io.*;
 
 public interface ISandboxService {
-    String createSandbox(ArticleDto articleDto, String id);
+    ArticleDto createSandbox(String id);
 
-    String createArticlePart(ArticlePartDto articlePartDto, String id);
+    ArticlePartDto createArticlePart(ArticlePartDto articlePartDto, String id);
 
     void deletePart(String articleId, String partId, String id);
 
-    void deleteSandbox(String articleId, String id);
+    void clearSandbox(String articleId, String id);
 
     String uploadImage(MultipartFile multipartFile, String id) throws IOException;
+
+    String createPreview(MultipartFile multipartFile, String id,String imageName) throws IOException;
+
+    void deletePreview(Long articleId,String userId);
+
+    void deleteArticle(String articleId, String id);
+
+    String deleteImage(String imageId);
 }

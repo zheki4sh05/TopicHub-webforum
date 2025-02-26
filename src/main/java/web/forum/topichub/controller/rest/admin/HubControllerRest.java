@@ -21,7 +21,7 @@ public class HubControllerRest {
     ){
         return new ResponseEntity<>(hubService.create(hubDto), HttpStatus.OK);
     }
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<HubDto> update(
             @Valid @RequestBody HubDto hubDto
 

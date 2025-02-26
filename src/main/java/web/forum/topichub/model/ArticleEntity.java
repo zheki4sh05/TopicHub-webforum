@@ -39,4 +39,8 @@ public class ArticleEntity {
     @Column(name = "created")
     private Timestamp created;
 
+    @Column(name="preview_id")
+    private String previewId;
+
+
 }

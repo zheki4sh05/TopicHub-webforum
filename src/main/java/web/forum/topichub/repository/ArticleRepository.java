@@ -54,4 +54,17 @@ public class ArticleRepository {
                 .getSingleResult();
     }
 
+    public Optional<Article> findSandboxByUser(UUID uuid, String name) {
+        try{
+            return Optional.of(em.createQuery("SELECT a FROM Article a WHERE a.author.id = :id and a.status= :status", Article.class)
+                    .setParameter("id", uuid)
+                    .setParameter("status", name)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
+    }
+
+    public void deleteByIdAndArticleId(Long aLong, UUID uuid) {
+    }
 }

@@ -11,6 +11,7 @@ public class PublicPath {
             "/api/v1/search/**",
             "/api/v1/answers",
             "/api/v1/image",
+            "/api/v1/image/**",
             "/api/v1/hubs",
             "/swagger-ui/**",
             "/swagger-resources/*",

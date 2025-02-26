@@ -22,4 +22,19 @@ where ap.uuid = :partId
     ArticlePart findByAuthorArticleAndId(@Param("id") UUID id,
                                          @Param("articleId") Long articleId,
                                          @Param("partId") UUID partId);
+
+    @Modifying
+    @Query("""
+DELETE from ArticlePart ap where ap.article.id= :articleId
+
+""")
+    void deleteByArticleId(@Param("articleId") Long id);
+
+    @Modifying
+    @Query("""
+
+delete from ArticlePart  ap where ap.article.id= :articleId and ap.uuid= :partId and ap.article.author.uuid= :userId
+
+""")
+    void deleteByIdAndArticle(@Param("partId") UUID partId, @Param("articleId") String articleId,@Param("userId") UUID id);
 }

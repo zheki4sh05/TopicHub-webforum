@@ -29,4 +29,5 @@ public class UserDto {
     private Boolean state;
 
     private String  status;
+    private String logoId;
 }

@@ -4,6 +4,8 @@ import web.forum.topichub.dto.*;
 
 public interface IArticleService {
     Long create(ArticleDto articleDto, String id);
+
+    Long publish(ArticleDto articleDto, String id);
     PageResponse<ArticleDto> fetch(ArticleFilterDto articleFilter);
     void delete(String id, String userId);
     PageResponse<ArticleDto> search(SearchDto searchDto);

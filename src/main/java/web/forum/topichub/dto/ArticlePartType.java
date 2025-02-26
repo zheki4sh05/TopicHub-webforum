@@ -4,7 +4,8 @@ public enum ArticlePartType {
     PARAGRAPH("paragraph"),
     CHAPTER("chapter"),
     IMG("img"),
-    IMG_LOAD("img_load");
+    IMG_LOAD("img_load"),
+    PREVIEW("preview");
     private final String type;
 
     ArticlePartType(String type) {

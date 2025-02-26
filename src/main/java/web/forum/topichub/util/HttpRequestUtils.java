@@ -2,8 +2,11 @@ package web.forum.topichub.util;
 
 import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.*;
+import org.springframework.web.client.*;
 import web.forum.topichub.dto.*;
+import web.forum.topichub.dto.client.*;
 import web.forum.topichub.security.util.*;
 
 import java.util.*;
@@ -16,6 +19,12 @@ public class HttpRequestUtils {
 
     @Value("${client.port}")
     private String port;
+
+    @Value("${admin.hostName}")
+    private String adminHost;
+
+    @Value("${admin.port}")
+    private String adminPort;
 
     @Value("${service.image.uri}")
     private String imageServiceUrl;
@@ -79,5 +88,29 @@ public class HttpRequestUtils {
 
     public String getImageServiceUri(String id) {
         return imageServiceUrl+"?imageId="+id;
+    }
+
+    public String getImageServiceSearchUri(String name){
+        return imageServiceUrl+"/search?name="+name;
+    }
+    public String findImageServiceUri(String id){
+        return imageServiceUrl+"/find?imageId="+id;
+    }
+
+
+    public <T,K> ResponseEntity<T> doPost(String uri, MediaType mediaType, K body, Class<T> tClass){
+        RestClient restClient = RestClient.create();
+        return restClient
+                .post()
+                .uri(uri)
+                .contentType(mediaType)
+                .body(body)
+                .retrieve()
+                .toEntity(tClass);
+    }
+
+
+    public String getAdminUrl() {
+        return "http://"+adminHost+":"+adminPort;
     }
 }

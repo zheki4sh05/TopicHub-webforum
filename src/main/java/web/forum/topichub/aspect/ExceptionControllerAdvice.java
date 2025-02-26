@@ -17,6 +17,14 @@ import java.time.*;
 public class ExceptionControllerAdvice {
     private final I18nUtil i18nUtil;
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> exceptionEntityNotFound(InvalidCredentialsException e, WebRequest request) {
+        return  createResponse(
+                e.getMessage(),
+                HttpStatus.UNAUTHORIZED,
+                request);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> exceptionEntityNotFound(EntityNotFoundException e, WebRequest request) {
         return  createResponse(

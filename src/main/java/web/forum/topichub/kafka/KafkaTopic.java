@@ -9,11 +9,11 @@ public class KafkaTopic {
 
     @Bean
     public NewTopic topic1() {
-        return TopicBuilder.name("topic-1").build();
+        return TopicBuilder.name("image.saved").build();
     }
 
     @Bean
     public NewTopic topic2() {
-        return TopicBuilder.name("topic-2").partitions(3).build();
+        return TopicBuilder.name("image.del").partitions(3).build();
     }
 }

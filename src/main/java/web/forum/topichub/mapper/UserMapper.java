@@ -19,7 +19,8 @@ public interface UserMapper {
             @Mapping(source = "status", target = "status"),
             @Mapping(source = "state", target = "state"),
             @Mapping(target = "password", ignore = true),
-            @Mapping(target = "roles", qualifiedByName = "mapRolesToNames")
+            @Mapping(target = "roles", qualifiedByName = "mapRolesToNames"),
+            @Mapping(target = "logoId", source = "logoId"),
     })
     UserDto toDto(User user);
 

@@ -1,15 +1,17 @@
-package web.forum.topichub.dto.client;
+package web.forum.topichub.redis;
 
 import lombok.*;
+import org.springframework.data.redis.core.*;
+import web.forum.topichub.dto.client.*;
 
 import java.time.*;
 
-@Builder
+@RedisHash("image")
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class ImageDto {
+@Builder
+public class ImageCache{
     private String id;
     private String filename;
     private LocalDate uploadDate;
@@ -17,5 +19,4 @@ public class ImageDto {
     private String contentType;
     private String targetId;
     private String metaName;
-    private byte[] file;
 }

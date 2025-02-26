@@ -19,6 +19,7 @@ public interface ArticleMapper{
             @Mapping(source = "dislikes", target = "dislikes"),
             @Mapping(source = "comments", target = "commentsCount"),
             @Mapping(source = "state", target = "likeState"),
+            @Mapping(source = "previewId", target = "previewId"),
             @Mapping( target = "keyWords", expression = "java(getWords(item.getKeyWords()))")
     })
     ArticleDto toDto(Article item);
@@ -30,12 +31,17 @@ public interface ArticleMapper{
 
     @Mappings({
             @Mapping(target = "theme", source = "theme"),
-            @Mapping(target = "keyWords", expression = "java(String.join(\"\\\\|\", articleDto.getKeyWords()))"),
+            @Mapping(target = "keyWords", qualifiedByName = "joinWords"),
             @Mapping(target = "created", expression = "java(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()))"),
             @Mapping(target = "author", ignore = true),
             @Mapping(target = "status", expression = "java(web.forum.topichub.dto.StatusDto.SANDBOX.name())"),
             @Mapping(target = "hub", ignore = true)
     })
     ArticleEntity fromDto(ArticleDto articleDto);
+
+    @Named("joinWords")
+    default String joinWords(List<String> words){
+        return String.join("\\|", words);
+    }
 
 }
