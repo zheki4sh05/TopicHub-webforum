@@ -8,7 +8,7 @@ import web.forum.topichub.model.complaints.*;
 public interface ComplaintMapper {
 
     @Mapping( target = "id", expression = "java(item.getId().toString())")
-    @Mapping(target = "targetId", expression = "java(\"id\")")
+    @Mapping(target = "targetId", expression = "java(item.getArticle().getId().toString())")
     @Mapping(target = "type", ignore = true)
     @Mapping(source = "date", target = "date")
     @Mapping(target = "userDto", source = "author")

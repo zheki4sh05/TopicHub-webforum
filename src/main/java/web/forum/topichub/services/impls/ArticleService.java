@@ -13,6 +13,8 @@ import web.forum.topichub.model.*;
 import web.forum.topichub.repository.*;
 import web.forum.topichub.services.interfaces.*;
 
+import java.sql.*;
+import java.time.*;
 import java.util.*;
 
 @AllArgsConstructor
@@ -51,6 +53,7 @@ public class ArticleService implements IArticleService {
     @Transactional
     public Long publish(ArticleDto articleDto, String id) {
         ArticleEntity articleEntity = articleRepo.findById(articleDto.getId()).orElseThrow(EntityNotFoundException::new);
+        articleEntity.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         articleEntity.setStatus(StatusDto.MODERATION.name());
         return articleDto.getId();
     }

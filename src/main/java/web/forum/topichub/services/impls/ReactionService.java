@@ -6,6 +6,7 @@ import org.springframework.stereotype.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.exceptions.*;
 import web.forum.topichub.model.*;
+import web.forum.topichub.model.complaints.*;
 import web.forum.topichub.repository.*;
 import web.forum.topichub.services.interfaces.*;
 
@@ -34,7 +35,6 @@ public class ReactionService implements IReactionService {
 
     @Override
     public void makeReaction(String type, Integer value, String userId, Long targetId) {
-
         switch (type) {
             case "article" -> {
                 var article = articleRepository.findById(targetId).orElseThrow(EntityNotFoundException::new);

@@ -46,7 +46,7 @@ public class SandboxController {
         return new ResponseEntity<>("", HttpStatus.CREATED);
     }
 
-    @PutMapping("")
+    @PutMapping("/update")
     public ResponseEntity<?> doPut(
             @RequestBody ArticleDto articleDto
     ) {

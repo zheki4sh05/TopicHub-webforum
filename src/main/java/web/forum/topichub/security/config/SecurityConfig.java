@@ -2,7 +2,9 @@ package web.forum.topichub.security.config;
 
 
 import lombok.*;
+import lombok.extern.slf4j.*;
 import org.springframework.context.annotation.*;
+import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.*;
 import org.springframework.security.config.annotation.authentication.configuration.*;
@@ -27,6 +29,7 @@ import java.util.*;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -54,11 +57,14 @@ public class SecurityConfig{
                  .authenticationProvider(authenticationProvider(userDetailsService))
                  .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, JwtCookieAuthenticationFilter.class)
-//                .exceptionHandling(
-//                        e->e.accessDeniedHandler(
-//                                        (request, response, accessDeniedException)->response.setStatus(401)
-//                                )
-//                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(
+                        e->e.accessDeniedHandler(
+                                        (request, response, accessDeniedException)->{
+                                            log.error("accessDeniedException {}", accessDeniedException.getMessage());
+                                            response.setStatus(500);
+                                        }
+                                )
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.BAD_REQUEST)))
                 .logout(l->l
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
