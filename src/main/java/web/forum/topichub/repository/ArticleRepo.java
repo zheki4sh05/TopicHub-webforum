@@ -15,10 +15,14 @@ public interface ArticleRepo extends JpaRepository<ArticleEntity, Long> {
 
 select ae 
 from ArticleEntity  ae 
-where ae.author.uuid = :authorId and ae.status = :status
+where ae.id= :articleId and ae.author.uuid = :authorId and (ae.status = :status or ae.status= :status2)
 
 """)
-    Optional<ArticleEntity> findSandboxByUser(@Param("authorId") UUID authorId, @Param("status") String status);
+    Optional<ArticleEntity> findSandboxByUser(@Param("authorId") UUID authorId,
+                                              @Param("status") String status,
+                                              @Param("status2") String status2,
+                                              @Param("articleId") Long articleId
+    );
 
     @Query("""
 

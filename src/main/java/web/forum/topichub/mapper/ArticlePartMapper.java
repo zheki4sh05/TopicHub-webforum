@@ -14,7 +14,9 @@ public interface ArticlePartMapper {
             @Mapping(source = "value", target = "value"),
             @Mapping(source = "name", target = "name"),
             @Mapping(source = "type", target = "type"),
-            @Mapping(source = "created", target = "created")
+            @Mapping(source = "created", target = "created"),
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "articleId", expression = "java( articlePart.getArticleEntity().getId())")
     })
     ArticlePartDto toDto(ArticlePart articlePart);
 
@@ -30,9 +32,4 @@ public interface ArticlePartMapper {
 
     })
     ArticlePart fromDto(ArticlePartDto articlePartDto);
-
-
-
-
-
 }

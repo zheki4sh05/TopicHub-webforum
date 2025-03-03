@@ -1,6 +1,7 @@
 package web.forum.topichub.services.impls;
 
 import lombok.*;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.exceptions.*;
@@ -17,7 +18,9 @@ public class HubService implements IHubService {
 
     private final HubRepository hubRepository;
     private final HubMapper hubMapper;
+
     @Override
+    @Cacheable(cacheNames = "hubs",cacheManager = "defaultCacheManager")
     public List<HubDto> findAll() {
         var list = hubRepository.findAll();
         return  list.stream()
@@ -26,6 +29,7 @@ public class HubService implements IHubService {
     }
 
     @Override
+    @Cacheable(cacheNames = "hubs",cacheManager = "defaultCacheManager")
     public HubDto create(HubDto hubDto) {
         Hub hub = hubMapper.fromDto(hubDto);
        Hub created = hubRepository.save(hub);
@@ -33,12 +37,14 @@ public class HubService implements IHubService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "hubs", cacheManager = "defaultCacheManager")
     public void delete(Long hubId) {
         Hub hub = hubRepository.findById(hubId.intValue()).orElseThrow(EntityNotFoundException::new);
         hubRepository.delete(hub);
     }
 
     @Override
+    @CachePut(cacheNames = "hubs", cacheManager = "defaultCacheManager")
     public HubDto update(HubDto hubDto) {
         Hub hub = hubRepository.findById(Integer.parseInt(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
         hub.setEnName(hubDto.getEn());

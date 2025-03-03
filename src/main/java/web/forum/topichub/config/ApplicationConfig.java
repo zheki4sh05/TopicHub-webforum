@@ -3,6 +3,8 @@ package web.forum.topichub.config;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
+import org.springframework.cache.*;
+import org.springframework.cache.concurrent.*;
 import org.springframework.context.annotation.*;
 import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.core.*;
@@ -28,6 +30,9 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
     }
+
+
+
     @Bean
     public RedisTemplate<Long, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Long, Object> template = new RedisTemplate<>();

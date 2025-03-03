@@ -63,14 +63,18 @@ public class ProfileController {
     @GetMapping("")
     public ResponseEntity<?> doGet(
             @RequestParam("type")  String type,
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "status",required = false) String status
     )  {
         String userId = customSecurityExpression.getUserId();
         switch (type) {
             case "articles" -> {
+                if(status==null || status.isEmpty()){
+                    status = StatusDto.PUBLISH.name();
+                }
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(articleService.fetch(createFilter(page, userId, userId)));
+                        .body(articleService.fetch(createFilter(page, userId, userId,status)));
             }
             case "profile" -> {
                 return ResponseEntity.ok()
@@ -163,12 +167,13 @@ public class ProfileController {
 
     private ArticleFilterDto createFilter(Integer page,
                                           String user,
-                                          String author){
+                                          String author,
+                                          String status){
         return  ArticleFilterDto.builder()
                 .page(page)
                 .userId(user)
                 .authorId(author)
-                .status(StatusDto.PUBLISH.name())
+                .status(status)
                 .build();
     }
 

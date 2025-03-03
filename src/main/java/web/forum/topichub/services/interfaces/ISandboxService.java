@@ -14,9 +14,9 @@ public interface ISandboxService {
 
     void clearSandbox(String articleId, String id);
 
-    String uploadImage(MultipartFile multipartFile, String id) throws IOException;
+    String uploadImage(MultipartFile multipartFile, String id,Long articleId) throws IOException;
 
-    String createPreview(MultipartFile multipartFile, String id,String imageName) throws IOException;
+    String createPreview(MultipartFile multipartFile, String id,String imageName, Long articleId) throws IOException;
 
     void deletePreview(Long articleId,String userId);
 

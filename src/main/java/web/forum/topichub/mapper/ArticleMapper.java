@@ -41,7 +41,7 @@ public interface ArticleMapper{
 
     @Named("joinWords")
     default String joinWords(List<String> words){
-        return String.join("\\|", words);
+        return String.join("|", words);
     }
 
 }

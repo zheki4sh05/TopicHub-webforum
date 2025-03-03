@@ -18,4 +18,6 @@ public interface IArticleService {
     String getStatusNameById(String id);
 
     void createArticle(Long articleId, String id);
+
+    void makeEdit(Long articleId);
 }

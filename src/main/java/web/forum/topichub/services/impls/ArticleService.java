@@ -55,6 +55,7 @@ public class ArticleService implements IArticleService {
         ArticleEntity articleEntity = articleRepo.findById(articleDto.getId()).orElseThrow(EntityNotFoundException::new);
         articleEntity.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         articleEntity.setStatus(StatusDto.MODERATION.name());
+        articleRepo.save(articleEntity);
         return articleDto.getId();
     }
 
@@ -64,7 +65,7 @@ public class ArticleService implements IArticleService {
         if(article.getAuthor().getUuid().toString().equals(userId)){
             articleRepo.delete(article);
         }else{
-            throw new EntityNotFoundException("Not found article for user");
+            throw new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
         }
     }
 
@@ -74,7 +75,7 @@ public class ArticleService implements IArticleService {
         Pageable pageable= PageRequest.of(searchDto.getArticleFilterDto().getPage()-1,15);
         Page<Article> articles = articleViewRepository.searchBy(searchDto.getAuthor(),
                 searchDto.getTheme(),
-                searchDto.getKeywords(),
+                "%"+searchDto.getKeywords()+"%",
                  pageable);
         PageResponse<Article> pageResponse = PageResponse.map(articles);
         checkLike(searchDto.getUserId(), pageResponse);
@@ -113,7 +114,7 @@ public class ArticleService implements IArticleService {
     @Transactional
     public void update(ArticleDto updatedArticle, String id) {
         List<Hub> hubList = hubDao.findAll();
-        var updateEntity = articleRepo.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
+        var updateEntity = articleRepo.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException());
      updateEntity.setKeyWords(articleMapper.joinWords(updatedArticle.getKeyWords()));
      updateEntity.setTheme(updatedArticle.getTheme());
      updateEntity.setHub(hubList.stream().filter(item->item.getId().equals(updatedArticle.getHub())).findFirst().orElseThrow(EntityNotFoundException::new));
@@ -151,6 +152,13 @@ public class ArticleService implements IArticleService {
                 })
                 .orElseThrow(EntityNotFoundException::new);
         articleRepo.save(article);
+    }
+
+    @Override
+    public void makeEdit(Long articleId) {
+        ArticleEntity articleEntity = articleRepo.findById(articleId).orElseThrow(EntityNotFoundException::new);
+        articleEntity.setStatus(StatusDto.EDIT.name());
+        articleRepo.save(articleEntity);
     }
 
     private void checkLike(String userId, PageResponse<Article> pageResponse){

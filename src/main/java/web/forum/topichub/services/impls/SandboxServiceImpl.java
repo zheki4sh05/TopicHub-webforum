@@ -60,9 +60,11 @@ public class SandboxServiceImpl implements ISandboxService {
     }
 
     @Override
+    @Transactional
     public ArticlePartDto createArticlePart(ArticlePartDto articlePartDto, String id) {
-        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name()).orElseThrow(EntityNotFoundException::new);
+        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name(), StatusDto.EDIT.name(), articlePartDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
         ArticlePart articlePart;
+
         if(articlePartDto.getUuid()==null){
             articlePart= articlePartMapper.fromDto(articlePartDto);
             articlePart.setArticleEntity(article);
@@ -86,7 +88,7 @@ public class SandboxServiceImpl implements ISandboxService {
     @Override
     @Transactional
     public void  clearSandbox(String articleId, String id) {
-        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name()).orElseThrow(EntityNotFoundException::new);
+        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name(),StatusDto.EDIT.name(), Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
         article.setTheme("");
         article.setHub(null);
         article.setKeyWords("");
@@ -98,8 +100,8 @@ public class SandboxServiceImpl implements ISandboxService {
     }
 
     @Override
-    public String uploadImage(MultipartFile multipartFile, String id) throws IOException {
-        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name()).orElseThrow(EntityNotFoundException::new);
+    public String uploadImage(MultipartFile multipartFile, String id,Long articleId) throws IOException {
+        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name(),StatusDto.EDIT.name(),articleId).orElseThrow(EntityNotFoundException::new);
         ImageDto imageDto = imageService.save(multipartFile, article.getId().toString(), multipartFile.getOriginalFilename());
         ArticlePart articlePart = ArticlePart.builder()
                 .articleEntity(article)
@@ -115,8 +117,13 @@ public class SandboxServiceImpl implements ISandboxService {
     }
 
     @Override
-    public String createPreview(MultipartFile multipartFile, String id,String imageName) throws IOException {
-        ArticleEntity article = articleRepo.findSandboxByUser(UUID.fromString(id), StatusDto.SANDBOX.name()).orElseThrow(EntityNotFoundException::new);
+    public String createPreview(MultipartFile multipartFile, String id,String imageName,Long articleId) throws IOException {
+        ArticleEntity article = articleRepo.findSandboxByUser(
+                UUID.fromString(id),
+                StatusDto.SANDBOX.name(),
+                StatusDto.EDIT.name(),
+                articleId
+                ).orElseThrow(EntityNotFoundException::new);
         ImageDto imageDto = imageService.save(multipartFile, article.getId().toString(), imageName);
         if(article.getPreviewId()!=null){
             imageService.delete(article.getPreviewId());

@@ -24,7 +24,7 @@ where a.id =:id
 
 select a 
 from Article a 
-where a.author.login like :author or a.theme like :theme or a.keyWords like :keywords
+where a.author.login like LOWER(:author) or a.theme like LOWER(:theme) or a.keyWords like LOWER(:keywords)
 """)
     Page<Article> searchBy(@Param("author") String author,
                            @Param("theme") String theme,

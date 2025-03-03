@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.dto.client.*;
+import web.forum.topichub.model.*;
 import web.forum.topichub.security.util.*;
 import web.forum.topichub.services.interfaces.*;
 
@@ -35,6 +36,14 @@ public class SandboxController {
         String id = customSecurityExpression.getUserId();
         articleService.publish(newArticle, id);
         return new ResponseEntity<>("", HttpStatus.CREATED);
+    }
+
+    @PatchMapping ("/edit")
+    public ResponseEntity<?> makeEdit(
+            @RequestBody ArticleStatusDto articleStatusDto
+    ){
+      articleService.makeEdit(Long.valueOf(articleStatusDto.getId()));
+        return new ResponseEntity<>(articleStatusDto.getId(), HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -96,14 +105,16 @@ public class SandboxController {
         ArticlePartDto articleDto =  sandboxService.createArticlePart(articlePartDto, id);
         return new ResponseEntity<>(articleDto, HttpStatus.OK);
     }
+
     @PostMapping("/image")
     public ResponseEntity<?> uploadImage(
-            @RequestPart("file") MultipartFile multipartFile
+            @RequestPart("file") MultipartFile multipartFile,
+            @RequestPart("id") String articleId
             ){
         String id = customSecurityExpression.getUserId();
         String savedId = null;
         try {
-            savedId = sandboxService.uploadImage(multipartFile,id);
+            savedId = sandboxService.uploadImage(multipartFile,id,Long.valueOf(articleId));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -136,18 +147,19 @@ public class SandboxController {
     ){
         String id = customSecurityExpression.getUserId();
         sandboxService.deletePart(articleId,partId,id);
-        return new ResponseEntity<>("", HttpStatus.OK);
+        return new ResponseEntity<>(partId, HttpStatus.OK);
     }
 
     @PostMapping("/preview")
     public ResponseEntity<?> createPreview(
             @RequestPart("file") MultipartFile multipartFile,
-            @RequestPart("name") String imageName
+            @RequestPart("name") String imageName,
+            @RequestPart("id") String articleId
     ){
         String id = customSecurityExpression.getUserId();
         String imageId = null;
         try {
-            imageId = sandboxService.createPreview(multipartFile,id,imageName);
+            imageId = sandboxService.createPreview(multipartFile,id,imageName,Long.valueOf(articleId));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

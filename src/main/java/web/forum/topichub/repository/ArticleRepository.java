@@ -67,4 +67,6 @@ public class ArticleRepository {
 
     public void deleteByIdAndArticleId(Long aLong, UUID uuid) {
     }
+
+
 }

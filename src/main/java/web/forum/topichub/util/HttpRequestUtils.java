@@ -52,11 +52,18 @@ public class HttpRequestUtils {
     }
     public static SearchDto parseSearchParams(Map<String, String> reqParam){
         return SearchDto.builder()
-                .author(reqParam.get("author"))
-                .theme(reqParam.get("theme"))
-                .keywords(reqParam.get("keywords"))
+                .author(modify( reqParam.get("author")))
+                .theme(modify(reqParam.get("theme")))
+                .keywords(modify(reqParam.get("keywords")))
                 .articleFilterDto(parseFilterParams(reqParam))
                 .build();
+    }
+
+    private static String modify(String str){
+        if(str==null){
+            return "";
+        }
+        return  "%".concat(str.toLowerCase()).concat("%");
     }
     public static boolean contains(String status) {
 

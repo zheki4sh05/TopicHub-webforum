@@ -5,6 +5,7 @@ public enum StatusDto {
         BLOCK("BLOCK"),
         ACTIVE("ACTIVE"),
         SANDBOX("SANDBOX"),
+        EDIT("EDIT"),
         PUBLISH ("PUBLISH");
 
         private String type;

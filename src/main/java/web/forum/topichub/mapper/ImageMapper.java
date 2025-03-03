@@ -30,8 +30,4 @@ public interface ImageMapper {
             @Mapping(target = "metaName", source = "metaName"),
     })
     ImageCache fromDto(ImageDto imageDto);
-
-
-
-
 }

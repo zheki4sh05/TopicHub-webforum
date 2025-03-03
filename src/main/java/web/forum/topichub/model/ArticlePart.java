@@ -38,7 +38,7 @@ public class ArticlePart {
     @JoinColumn(name = "article", insertable = false, updatable = false)
     private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article")
     private ArticleEntity articleEntity;
 }
