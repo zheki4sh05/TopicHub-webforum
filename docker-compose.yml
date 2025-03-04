@@ -1,0 +1,86 @@
+services:
+  webforum:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-prod
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+      - kafka_broker
+      - redistopichub
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_DRIVER: ${DB_DRIVER}
+      SECRET_KEY: ${SECRET_KEY}
+      CLIENT_HOST: ${CLIENT_HOST}
+      CLIENT_PORT:  ${CLIENT_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      ADMIN_HOST: ${ADMIN_HOST}
+      ADMIN_PORT: ${ADMIN_PORT}
+      REDIS_HOST : ${REDIS_HOST}
+      REDIS_PORT : ${REDIS_PORT}
+    networks:
+      - kafka_net
+  db:
+    env_file:
+      - .env
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - kafka_net
+  kafka_broker:
+    env_file:
+      - .env
+    image: apache/kafka:latest
+    container_name: broker
+    hostname: broker
+    ports:
+      - ${KAFKA_PORT}:${KAFKA_PORT}
+    environment:
+      KAFKA_BROKER_ID: "1"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://broker:29092,PLAINTEXT_HOST://broker:9092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_NODE_ID: "1"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@broker:29093"
+      KAFKA_LISTENERS: "PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    networks:
+      - kafka_net
+  redistopichub:
+    image: redis:alpine
+    hostname: ${REDIS_HOST}
+    container_name: redis_topichub
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - kafka_net
+volumes:
+  db-data: null
+networks:
+  kafka_net:
+    driver: bridge

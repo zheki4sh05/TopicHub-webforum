@@ -17,7 +17,6 @@ public interface UserMapper {
             @Mapping(source = "email", target = "email"),
             @Mapping(source = "login", target = "login"),
             @Mapping(source = "status", target = "status"),
-            @Mapping(source = "state", target = "state"),
             @Mapping(target = "password", ignore = true),
             @Mapping(target = "roles", qualifiedByName = "mapRolesToNames"),
             @Mapping(target = "logoId", source = "logoId"),
@@ -36,7 +35,6 @@ public interface UserMapper {
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "login", source = "login"),
             @Mapping(target = "status",expression = "java(web.forum.topichub.dto.StatusDto.ACTIVE.name())"),
-            @Mapping(target = "state", ignore = true),
             @Mapping(target = "password",  qualifiedByName = "hash"),
             @Mapping(target = "roles", ignore = true)
     })
@@ -53,7 +51,6 @@ public interface UserMapper {
     @Mapping(source = "login", target = "login")
     @Mapping(target = "password",ignore = true)
     @Mapping(target = "roles",ignore = true)
-    @Mapping(target = "state",ignore = true)
     @Mapping(target = "status",ignore = true)
     @Named("toAuthor")
     UserDto toAuthor(User user);

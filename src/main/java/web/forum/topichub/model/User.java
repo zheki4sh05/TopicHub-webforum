@@ -30,9 +30,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "state")
-    private Boolean state;
-
     @Column(name = "status")
     private String status;
 

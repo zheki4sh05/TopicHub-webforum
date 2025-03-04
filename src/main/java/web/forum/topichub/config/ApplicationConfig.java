@@ -26,10 +26,10 @@ public class ApplicationConfig {
         return entityManager.getCriteriaBuilder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return new CustomUserDetailsService();
+//    }
 
 
 

@@ -39,15 +39,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
     listener:
       auto-startup: false
     streams:
       auto-startup: false
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 application:
   security:
     jwt:
@@ -57,9 +57,9 @@ application:
 logging:
   level:
     root: INFO
-    com:
-      example:
-        topichubbackend: INFO
+    web:
+      forum:
+        topichub: INFO
 client:
   hostName:
     ${CLIENT_HOST}

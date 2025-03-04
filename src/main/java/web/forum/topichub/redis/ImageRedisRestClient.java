@@ -28,7 +28,8 @@ public class ImageRedisRestClient {
 
     public PageResponse<ImageDto> findByName(String value, PageRequest pageRequest) {
         Page<ImageCache> imageCachePage = checkRedisCache(value, pageRequest);
-        if (imageCachePage != null) {
+        if (imageCachePage != null && imageCachePage.getContent().size()!=0) {
+            log.info("data from cache {}", imageCachePage.getTotalPages());
             return PageResponse.map(imageMapper::toDto, imageCachePage);
         }
 
@@ -55,11 +56,13 @@ public class ImageRedisRestClient {
                 }
                );
 
-        try{
-            imageRedisRepository.saveAll(imageCacheList);
-        }catch (RedisConnectionFailureException e){
-                log.error("redis connection error {}", e.getMessage());
-        }
+//        try{
+      imageRedisRepository.saveAll(imageCacheList);
+
+//        }catch (RedisConnectionFailureException e){
+//            System.out.println(e.getMessage());
+//                log.error("redis connection error {}", e.getMessage());
+//        }
     }
 
     private Page<ImageCache> checkRedisCache(String value, PageRequest pageRequest){
