@@ -1,5 +1,6 @@
 package web.forum.topichub.repository;
 
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
 import web.forum.topichub.model.*;
@@ -22,10 +23,10 @@ From Subscription s where s.author.uuid= :authorId and s.follower.uuid = :follow
     @Query("""
 FROM Subscription s where s.author.uuid = :id
 """)
-    List<Subscription> findFollowersById(@Param("id") UUID id);
+    Page<Subscription> findFollowersById(@Param("id") UUID id,Pageable pageable);
 
     @Query("""
 FROM Subscription s where s.follower.uuid = :id
 """)
-    List<Subscription> fetch(@Param("id") UUID id);
+    Page<Subscription> fetch(@Param("id") UUID id, Pageable pageable);
 }

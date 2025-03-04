@@ -1,5 +1,6 @@
 package web.forum.topichub.services.interfaces;
 
+import org.springframework.data.domain.*;
 import web.forum.topichub.dto.*;
 
 import java.util.*;
@@ -15,7 +16,7 @@ public interface IReactionService {
 
     void removeReaction(String type, String userId, Long aLong);
 
-    List<AuthorDto> fetchAllSubscribes(String id);
+    PageResponse<AuthorDto> fetchAllSubscribes(String id, Integer page);
 
-    List<AuthorDto> fetchAllFollowers(String id);
+    PageResponse<AuthorDto> fetchAllFollowers(String id,Integer page);
 }

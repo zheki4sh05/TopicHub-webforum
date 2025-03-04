@@ -2,6 +2,7 @@ package web.forum.topichub.controller.rest;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import web.forum.topichub.dto.*;
@@ -38,16 +39,17 @@ public class SubscribeController {
      */
     @GetMapping("")
     public ResponseEntity<?> doGet(
-            @RequestParam("type") @NotNull String type
+            @RequestParam("type") @NotNull String type,
+          @Min(1) @RequestParam("page") Integer page
     ) {
         String id = customSecurityExpression.getUserId();
         switch(type){
             case "subscribes" -> {
-                List<AuthorDto> authorDtos = reactionService.fetchAllSubscribes(id);
+                PageResponse<AuthorDto> authorDtos = reactionService.fetchAllSubscribes(id,page);
                 return new ResponseEntity<>(authorDtos, HttpStatus.OK);
             }
             case "followers" -> {
-                List<AuthorDto> authorDtos = reactionService.fetchAllFollowers(id);
+                PageResponse<AuthorDto> authorDtos = reactionService.fetchAllFollowers(id,page);
                 return new ResponseEntity<>(authorDtos, HttpStatus.OK);
             }
             default -> {

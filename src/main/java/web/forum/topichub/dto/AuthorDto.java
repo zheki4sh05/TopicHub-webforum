@@ -11,5 +11,6 @@ public class AuthorDto {
     private String id;
     private String email;
     private String login;
+    private String logoId;
 
 }

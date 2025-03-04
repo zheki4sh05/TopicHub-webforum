@@ -2,9 +2,11 @@ package web.forum.topichub.services.impls;
 
 import lombok.*;
 import lombok.extern.slf4j.*;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.exceptions.*;
+import web.forum.topichub.mapper.*;
 import web.forum.topichub.model.*;
 import web.forum.topichub.model.complaints.*;
 import web.forum.topichub.repository.*;
@@ -23,6 +25,8 @@ public class ReactionService implements IReactionService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final ArticleRepo articleRepository;
+    private final AuthorMapper authorMapper;
+    private final Integer PAGE_SIZE=15;
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
         Boolean subscribe =subscriptionRepository.checkSubscribe(UUID.fromString(userId),UUID.fromString(authorId));
@@ -113,24 +117,21 @@ public class ReactionService implements IReactionService {
     }
 
     @Override
-    public List<AuthorDto> fetchAllSubscribes(String id) {
-
-        List<Subscription> subscriptions = subscriptionRepository.fetch(UUID.fromString(id));
-
-        return subscriptions.stream().map(item->AuthorDto.builder()
-                .login(item.getAuthor().getLogin())
-                .email(item.getAuthor().getEmail())
-                .id(item.getAuthor().getUuid().toString())
-                .build()).collect(Collectors.toList());
+    public PageResponse<AuthorDto> fetchAllSubscribes(String id,Integer page) {
+        Pageable pageable= PageRequest.of(page-1,PAGE_SIZE);
+        Page<Subscription> subscriptions = subscriptionRepository.fetch(UUID.fromString(id),pageable);
+//        return subscriptions.stream().map(item->AuthorDto.builder()
+//                .login(item.getAuthor().getLogin())
+//                .email(item.getAuthor().getEmail())
+//                .id(item.getAuthor().getUuid().toString())
+//                .build()).collect(Collectors.toList());
+        return  PageResponse.map(authorMapper::mapFrom, subscriptions);
     }
 
     @Override
-    public List<AuthorDto> fetchAllFollowers(String id) {
-        List<Subscription> userList = subscriptionRepository.findFollowersById(UUID.fromString(id));
-        return userList.stream().map(item->AuthorDto.builder()
-                .login(item.getAuthor().getLogin())
-                .email(item.getAuthor().getEmail())
-                .id(item.getAuthor().getUuid().toString())
-                .build()).collect(Collectors.toList());
+    public  PageResponse<AuthorDto> fetchAllFollowers(String id,Integer page) {
+        Pageable pageable= PageRequest.of(page-1,PAGE_SIZE);
+        Page<Subscription> userList = subscriptionRepository.findFollowersById(UUID.fromString(id),pageable);
+        return PageResponse.map(authorMapper::mapFrom, userList);
     }
 }

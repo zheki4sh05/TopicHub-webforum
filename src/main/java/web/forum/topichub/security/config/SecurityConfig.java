@@ -33,7 +33,6 @@ import java.util.*;
 public class SecurityConfig{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
     private final CustomLogoutHandler logoutHandler;
     private final UserDetailsService userDetailsService;
     private final HttpRequestUtils httpRequestUtils;
@@ -55,8 +54,7 @@ public class SecurityConfig{
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .authenticationProvider(authenticationProvider(userDetailsService))
-                 .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtAuthenticationFilter, JwtCookieAuthenticationFilter.class)
+                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(
                         e->e.accessDeniedHandler(
                                         (request, response, accessDeniedException)->{
