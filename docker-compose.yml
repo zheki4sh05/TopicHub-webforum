@@ -29,7 +29,7 @@ services:
       REDIS_HOST : ${REDIS_HOST}
       REDIS_PORT : ${REDIS_PORT}
     networks:
-      - kafka_net
+      - app-network
   db:
     env_file:
       - .env
@@ -44,7 +44,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - kafka_net
+      - app-network
   kafka_broker:
     env_file:
       - .env
@@ -70,7 +70,7 @@ services:
       KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
     networks:
-      - kafka_net
+      - app-network
   redistopichub:
     image: redis:alpine
     hostname: ${REDIS_HOST}
@@ -78,9 +78,9 @@ services:
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
     networks:
-      - kafka_net
+      - app-network
 volumes:
   db-data: null
 networks:
-  kafka_net:
-    driver: bridge
+  app-network:
+    external: true
