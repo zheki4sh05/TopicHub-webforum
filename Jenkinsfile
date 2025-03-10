@@ -17,7 +17,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                  script {
-                   docker.build("${env.DOCKER_HUB_REPO}:latest")
+                   docker.build("${DOCKER_HUB_REPO}:latest")
                  }
             }
         }
