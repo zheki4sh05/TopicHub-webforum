@@ -3,9 +3,9 @@ pipeline {
     tools {
         gradle 'Gradle'
     }
-    environment{
-           DOCKER_HUB_REPO = 'zheki4/webforum'
-    }
+//     environment{
+//            DOCKER_HUB_REPO = 'zheki4/webforum'
+//     }
     stages {
         stage('Clean and Build ') {
             steps {
@@ -17,7 +17,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                  script {
-                   docker.build("${DOCKER_HUB_REPO}:latest")
+                   docker.build("zheki4/webforum:latest")
                  }
             }
         }
