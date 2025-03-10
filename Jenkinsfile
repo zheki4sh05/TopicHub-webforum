@@ -1,15 +1,21 @@
 pipeline {
     agent any
-
+    tools {
+        gradle 'Gradle'
+    }
+    environment{
+           DOCKER_HUB_REPO = 'zheki4/webforum'
+    }
     stages {
-        stage('Build') {
+        stage('Clean and Build ') {
             steps {
-                echo 'Building..'
+                sh './gradlew clean'
+                sh './gradlew bootJar'
             }
         }
-        stage('Test') {
+        stage('Build docker image') {
             steps {
-                echo 'Testing..'
+                docker.build("${DOCKER_HUB_REPO}:latest")
             }
         }
         stage('Deploy') {
