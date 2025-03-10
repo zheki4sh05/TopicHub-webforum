@@ -16,9 +16,10 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                 script {
-                   docker.build("zheki4/webforum:latest")
-                 }
+
+                 sh 'docker build -t zheki4/webforum:latest .'
+                 sh 'docker push  zheki4/webforum:latest'
+
             }
         }
         stage('Deploy') {
