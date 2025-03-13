@@ -48,6 +48,14 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+  boot:
+    admin:
+      client:
+        enabled: true
+        instance:
+          name: web-forum
+          service-host-type: ip
+        url: http://localhost:8080
 application:
   security:
     jwt:
@@ -55,6 +63,9 @@ application:
       accessTokenExpire: 86400000
       refresh-token-expiration: 604800000
 logging:
+  file:
+    name: logs/app/log
+    path: logs
   level:
     root: INFO
     web:

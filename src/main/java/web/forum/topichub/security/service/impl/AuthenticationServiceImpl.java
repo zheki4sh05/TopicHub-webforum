@@ -68,7 +68,7 @@ public class AuthenticationServiceImpl {
             if (new PasswordEncoderWrapper().matches(userDto.getPassword(), isExist.getPassword())) {
                 return userMapper.toDto(isExist);
             } else {
-                throw new InvalidCredentialsException(ErrorKey.CREDENTIALS.name());
+                throw new InvalidCredentialsException(ErrorKey.CREDENTIALS.key());
             }
         }
     }

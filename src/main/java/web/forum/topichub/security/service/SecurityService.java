@@ -7,6 +7,7 @@ import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.web.authentication.*;
 import org.springframework.stereotype.*;
+import web.forum.topichub.exceptions.*;
 
 @Component
 @AllArgsConstructor
@@ -29,6 +30,8 @@ public class SecurityService {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            }else {
+                throw new TokenExpiredException();
             }
         }
 

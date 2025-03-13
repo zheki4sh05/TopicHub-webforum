@@ -21,7 +21,7 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<?> exceptionEntityNotFound(InvalidCredentialsException e, WebRequest request) {
         return  createResponse(
                 e.getMessage(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.NOT_FOUND,
                 request);
     }
 

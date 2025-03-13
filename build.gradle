@@ -64,6 +64,12 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core:11.3.4'
 // https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.3.4'
+	// https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-server
+	implementation 'de.codecentric:spring-boot-admin-starter-server:3.4.5'
+	// https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-client
+	implementation 'de.codecentric:spring-boot-admin-starter-client:3.4.5'
+
+
 
 
 
