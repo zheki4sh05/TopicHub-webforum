@@ -1,9 +1,11 @@
 package web.forum.topichub.security.repository;
 
+import org.springframework.cache.annotation.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
 import web.forum.topichub.security.model.*;
 
+import java.io.*;
 import java.util.*;
 
 public interface TokenRepository extends JpaRepository<Token, UUID> {
@@ -13,7 +15,7 @@ where t.user.uuid = :userId and t.loggedOut = false
 """)
     List<Token> findAllAccessTokensByUser(@Param("userId") UUID userId);
 
-    Optional<Token> findByAccessToken(String token);
+    Token findByAccessToken(String token);
 
     Optional<Token > findByRefreshToken(String token);
 }

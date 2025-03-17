@@ -4,9 +4,11 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.*;
 import io.jsonwebtoken.security.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.cache.annotation.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 import web.forum.topichub.model.User;
+import web.forum.topichub.security.model.*;
 import web.forum.topichub.security.repository.*;
 
 import javax.crypto.*;
@@ -26,12 +28,8 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token-expiration}")
     private Long refreshTokenExpire;
 
-    public JwtService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
-
     @Autowired
-    private TokenRepository tokenRepository;
+    private ITokenService tokenService;
 
 
     public String extractUsername(String token) {
@@ -42,16 +40,17 @@ public class JwtService {
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
 
-        var tokenOptional = tokenRepository.findByAccessToken(token);
-        boolean validToken= tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut();
+        var tokenEntity = tokenService.findByAccessToken(token);
+        boolean validToken= tokenEntity!=null && !tokenEntity.getLoggedOut();
 
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
 
+
     public boolean isValidRefreshToken(String token, User user) {
         String username = extractUsername(token);
 
-        var tokenOptional = tokenRepository.findByRefreshToken(token);
+        var tokenOptional = tokenService.findByRefreshToken(token);
         boolean validToken= tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut();
 
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;

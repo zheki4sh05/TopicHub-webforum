@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import web.forum.topichub.model.*;
 
+import java.io.*;
 import java.util.*;
 
 @Entity
 @Table(name = "token")
 @Getter
 @Setter
-public class Token {
+public class Token implements Serializable {
 
     @Id
     @Column(name = "id")

@@ -45,7 +45,7 @@ public class AuthService implements IAuthorService {
             userRoleRepository.deleteAll(userRoles);
             userRepository.delete(user.get());
         }else{
-            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.key());
         }
 
     }
@@ -58,7 +58,7 @@ public class AuthService implements IAuthorService {
             userRepository.save(item);
             return userMapper.toDto(item);
         }else{
-            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.key());
         }
     }
 

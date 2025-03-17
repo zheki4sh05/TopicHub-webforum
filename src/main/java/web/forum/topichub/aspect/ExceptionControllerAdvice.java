@@ -17,6 +17,14 @@ import java.time.*;
 public class ExceptionControllerAdvice {
     private final I18nUtil i18nUtil;
 
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<?> exceptionInternalServerErrorException(InternalServerErrorException e, WebRequest request) {
+        return  createResponse(
+                e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                request);
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<?> exceptionEntityNotFound(InvalidCredentialsException e, WebRequest request) {
         return  createResponse(
@@ -48,13 +56,6 @@ public class ExceptionControllerAdvice {
                     HttpStatus.CONFLICT,
                     request);
     }
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//     public ResponseEntity<?>  handleIllegalArgumentException(DataIntegrityViolationException e, WebRequest request) {
-//        return  createResponse(
-//                ErrorKey.UNIQUE.name(),
-//                HttpStatus.BAD_REQUEST,
-//                request);
-//    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?>  handleIllegalArgumentException(MethodArgumentNotValidException e, WebRequest request) {
         return  createResponse(
@@ -62,13 +63,13 @@ public class ExceptionControllerAdvice {
                 HttpStatus.BAD_REQUEST,
                 request);
     }
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<?>  handleAllRuntimeException(RuntimeException e, WebRequest request) {
-//        return  createResponse(
-//                ErrorKey.SERVER_ERROR.name(),
-//                HttpStatus.INTERNAL_SERVER_ERROR,
-//                request);
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?>  handleAllRuntimeException(RuntimeException e, WebRequest request) {
+        return  createResponse(
+                ErrorKey.SERVER_ERROR.name(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                request);
+    }
 
     private ResponseEntity<ErrorDto> createResponse(String errorKey, HttpStatus httpStatus,WebRequest request ){
         return new ResponseEntity<>(createErrorDto(

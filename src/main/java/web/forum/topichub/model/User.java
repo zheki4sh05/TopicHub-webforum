@@ -8,6 +8,7 @@ import org.hibernate.annotations.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.userdetails.*;
 
+import java.io.*;
 import java.util.*;
 
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import java.util.*;
 @Builder
 @Entity
 @Table(name="author")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
     @Column(name = "id")
     @Id
     private UUID uuid;

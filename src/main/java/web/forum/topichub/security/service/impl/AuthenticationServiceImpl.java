@@ -33,7 +33,7 @@ public class AuthenticationServiceImpl {
 
         Optional<User> isExist = repository.findByEmailOrLogin(authDto.getLogin());
         if(isExist.isPresent()) {
-            throw new EntityAlreadyExists(ErrorKey.CONFLICT.name());
+            throw new EntityAlreadyExists(ErrorKey.CONFLICT.key());
         }
         var user  = userMapper.mapFrom(authDto);
         user = repository.save(user);
@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl {
     }
     private UserDto checkUser(User isExist, AuthDto userDto) {
         if (isExist == null) {
-            throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.name());
+            throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.key());
         } else if (isExist.getStatus().equals(StatusDto.BLOCK.name())) {
             throw new UserBlockException();
         } else {

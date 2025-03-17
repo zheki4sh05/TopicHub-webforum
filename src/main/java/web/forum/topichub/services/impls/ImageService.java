@@ -11,6 +11,7 @@ import org.springframework.web.client.*;
 import org.springframework.web.multipart.*;
 import web.forum.topichub.dto.*;
 import web.forum.topichub.dto.client.*;
+import web.forum.topichub.exceptions.*;
 import web.forum.topichub.mapper.*;
 import web.forum.topichub.redis.*;
 import web.forum.topichub.repository.*;
@@ -53,13 +54,18 @@ public class ImageService implements IImageService {
         map.add("file", byteArrayResource);
         map.add("targetId", targetId);
         map.add("name", imageName);
-       ResponseEntity<ImageDto> imageDtoResponseEntity = restClient
-                .post()
-                .uri(httpRequestUtils.getImageServiceUri())
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(map)
-                .retrieve()
-                .toEntity(ImageDto.class);
+        ResponseEntity<ImageDto> imageDtoResponseEntity = new ResponseEntity<>(HttpStatusCode.valueOf(500));
+        try{
+            imageDtoResponseEntity   = restClient
+                    .post()
+                    .uri(httpRequestUtils.getImageServiceUri())
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(map)
+                    .retrieve()
+                    .toEntity(ImageDto.class);
+        }catch (RuntimeException e){
+            throw new InternalServerErrorException(ErrorKey.IMAGE_LOAD_ERROR.key());
+        }
 
         return imageDtoResponseEntity.getBody();
 

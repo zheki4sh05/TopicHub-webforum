@@ -8,5 +8,5 @@ import web.forum.topichub.redis.*;
 @Repository
 public interface ImageRedisRepository extends CrudRepository<ImageCache, String> {
 
-    Page<ImageCache> findByFilename(String value, PageRequest pageRequest);
+    Page<ImageCache> findByMetaName(String value, PageRequest pageRequest);
 }

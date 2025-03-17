@@ -27,11 +27,11 @@ public class ImageRedisRestClient {
     private final HttpRequestUtils httpRequestUtils;
 
     public PageResponse<ImageDto> findByName(String value, PageRequest pageRequest) {
-        Page<ImageCache> imageCachePage = checkRedisCache(value, pageRequest);
-        if (imageCachePage != null && imageCachePage.getContent().size()!=0) {
-            log.info("data from cache {}", imageCachePage.getTotalPages());
-            return PageResponse.map(imageMapper::toDto, imageCachePage);
-        }
+//        Page<ImageCache> imageCachePage = checkRedisCache(value, pageRequest);
+//        if (imageCachePage != null && imageCachePage.getContent().size()!=0) {
+//            log.info("data from cache {}", imageCachePage.getTotalPages());
+//            return PageResponse.map(imageMapper::toDto, imageCachePage);
+//        }
 
         RestClient restClient = RestClient.create();
         ResponseEntity<PageResponse<ImageDto>> imageDtoResponseEntity =  restClient
@@ -56,18 +56,17 @@ public class ImageRedisRestClient {
                 }
                );
 
-//        try{
+        try{
       imageRedisRepository.saveAll(imageCacheList);
 
-//        }catch (RedisConnectionFailureException e){
-//            System.out.println(e.getMessage());
-//                log.error("redis connection error {}", e.getMessage());
-//        }
+        }catch (RedisConnectionFailureException e){
+                log.error("redis connection error {}", e.getMessage());
+        }
     }
 
     private Page<ImageCache> checkRedisCache(String value, PageRequest pageRequest){
         try{
-            return imageRedisRepository.findByFilename(value, pageRequest);
+            return imageRedisRepository.findByMetaName(value, pageRequest);
         }catch (Exception e){
             return null;
         }

@@ -79,7 +79,8 @@ public class ReactionService implements IReactionService {
                            .follower(user)
                    .build());
        }else{
-           var subscription = subscriptionRepository.findByUsers(author.getUuid(), user.getUuid()).orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
+           var subscription = subscriptionRepository.findByUsers(author.getUuid(), user.getUuid())
+                   .orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.key()));
            subscriptionRepository.delete(subscription);
        }
 
@@ -98,7 +99,7 @@ public class ReactionService implements IReactionService {
             bookmarkRepository.save(entity);
         }else{
             var bookmark = bookmarkRepository.findByUserIdArticleId(UUID.fromString(userId),Long.valueOf(articleId))
-                    .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
+                    .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.key()));
             bookmarkRepository.delete(bookmark);
         }
     }
@@ -108,7 +109,7 @@ public class ReactionService implements IReactionService {
         switch (type) {
             case "article" -> {
                 var like = likeRepository.findById(articleId, UUID.fromString(userId))
-                        .orElseThrow(() -> new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
+                        .orElseThrow(() -> new EntityNotFoundException(ErrorKey.NOT_FOUND.key()));
                 likeRepository.delete(like);
             }
             case "comment" -> throw new UnsupportedException();

@@ -65,7 +65,7 @@ public class ArticleService implements IArticleService {
         if(article.getAuthor().getUuid().toString().equals(userId)){
             articleRepo.delete(article);
         }else{
-            throw new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
+            throw new EntityNotFoundException(ErrorKey.NOT_FOUND.key());
         }
     }
 
