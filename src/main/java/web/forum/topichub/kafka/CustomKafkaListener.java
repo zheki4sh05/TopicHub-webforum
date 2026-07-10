@@ -17,4 +17,7 @@ public class CustomKafkaListener {
         log.info("Received message [{}] in group2", id);
     }
 
+
+
+
 }

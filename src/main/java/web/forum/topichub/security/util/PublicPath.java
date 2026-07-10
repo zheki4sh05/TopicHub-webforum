@@ -13,6 +13,7 @@ public class PublicPath {
             "/api/v1/image",
             "/api/v1/image/**",
             "/api/v1/hubs",
+            "/api/v1/credentials/**",
             "/swagger-ui/**",
             "/swagger-resources/*",
             "/v3/api-docs/**"

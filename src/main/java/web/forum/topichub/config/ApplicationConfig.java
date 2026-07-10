@@ -3,22 +3,33 @@ package web.forum.topichub.config;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.*;
-import org.springframework.cache.concurrent.*;
 import org.springframework.context.annotation.*;
 import org.springframework.data.redis.cache.*;
 import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.jedis.*;
 import org.springframework.data.redis.core.*;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.web.client.*;
-import web.forum.topichub.services.impls.*;
 
 import java.time.*;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+
+
+    @Value("${spring.redis.host}")
+    private String REDIS_HOST;
+
+    @Value("${spring.redis.port}")
+    private Integer REDIS_PORT;
+
+    @Value("${application.credentials.code.life}")
+    private Integer codeLifeTime;
+
+    @Value("${application.credentials.token.life}")
+    private Integer tokenEmailLifeTime;
 
     @Bean
     public RestClient createRestClient(){
@@ -30,27 +41,23 @@ public class ApplicationConfig {
         return entityManager.getCriteriaBuilder();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new CustomUserDetailsService();
-//    }
-
-
     @Bean
     public JedisConnectionFactory jedisConnectionFactory()
     {
-
-        // redis server properties we write here if we are in same machine than there is no need to write properties
-
-        // jedisConnectionFactory.setHostName("localhost");
-        // jedisConnectionFactory.setPort(6379);
-
-        return new JedisConnectionFactory();
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(REDIS_HOST, REDIS_PORT);
+        return new JedisConnectionFactory(config);
     }
 
     @Bean
     public RedisTemplate<Long, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Long, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate2(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         return template;
     }
@@ -74,7 +81,23 @@ public class ApplicationConfig {
                 .withCacheConfiguration("tokens", cacheConfiguration)
                 .build();
     }
-
-
+    @Bean
+    public CacheManager codeCacheManager(){
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(codeLifeTime));
+        return RedisCacheManager.builder(jedisConnectionFactory())
+                .cacheDefaults(cacheConfiguration)
+                .withCacheConfiguration("codes", cacheConfiguration)
+                .build();
+    }
+    @Bean
+    public CacheManager tokenEmailCacheManager(){
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(tokenEmailLifeTime));
+        return RedisCacheManager.builder(jedisConnectionFactory())
+                .cacheDefaults(cacheConfiguration)
+                .withCacheConfiguration("tokensEmail", cacheConfiguration)
+                .build();
+    }
 
 }

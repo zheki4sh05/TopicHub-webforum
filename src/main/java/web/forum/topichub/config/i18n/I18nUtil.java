@@ -5,6 +5,8 @@ import org.springframework.context.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.context.request.*;
 
+import java.util.*;
+
 @Component
 @AllArgsConstructor
 public class I18nUtil {
@@ -12,6 +14,10 @@ public class I18nUtil {
     private final MessageSource messageSource;
     public String getMessage(String code, WebRequest request, String... args){
         return messageSource.getMessage(code, args, request.getLocale());
+    }
+
+    public String getMessage(String code, Locale locale, String... args){
+        return messageSource.getMessage(code, args, locale);
     }
 
 }

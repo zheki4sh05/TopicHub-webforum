@@ -20,7 +20,7 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationServiceImpl {
+public class AuthenticationServiceImpl implements IAuthenticationService{
     private final UserRepository repository;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
@@ -119,5 +119,19 @@ public class AuthenticationServiceImpl {
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
+    }
+
+    @Override
+    public void updatePassword(CredentialsDto credentialsDto) {
+        if(!credentialsDto.getNewPass1().equals(credentialsDto.getNewPass2())
+                || credentialsDto.getNewPass1().length()<6
+                || credentialsDto.getNewPass2().length()>12){
+            throw new BadRequestException();
+        }else{
+            User user = repository.findByEmailOrLogin(credentialsDto.getEmail()).orElseThrow(EntityNotFoundException::new);
+            revokeAllTokenByUser(user);
+            user.setPassword(new PasswordEncoderWrapper().hash(credentialsDto.getNewPass1()));
+            repository.save(user);
+        }
     }
 }

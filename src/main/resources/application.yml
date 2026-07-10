@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 spring:
   servlet:
     multipart:
@@ -44,9 +44,6 @@ spring:
       auto-startup: false
     streams:
       auto-startup: false
-  data:
-    redis:
-      port: ${REDIS_PORT}
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -56,6 +53,8 @@ spring:
         - userDetails
         - tokens
         - hubs
+        - codes
+        - tokensEmail
   boot:
     admin:
       client:
@@ -63,13 +62,22 @@ spring:
         instance:
           name: web-forum
           service-host-type: ip
-        url: http://localhost:8080
+        url: ${ADMIN_SERVER_URL}
 application:
   security:
     jwt:
       secret-key: ${SECRET_KEY}
       accessTokenExpire: 86400000
       refresh-token-expiration: 604800000
+  credentials:
+    code:
+      length: 6
+      life: 1
+    token:
+      life: 5
+  kafka:
+    topic:
+      emailSend: email.send
 logging:
   file:
     name: logs/app/log

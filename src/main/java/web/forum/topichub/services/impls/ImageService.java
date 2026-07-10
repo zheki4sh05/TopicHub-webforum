@@ -93,6 +93,4 @@ public class ImageService implements IImageService {
     public ImageDto findById(String imageId) {
         return imageRedisRestClient.findById(imageId);
     }
-
-
 }

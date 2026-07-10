@@ -19,6 +19,9 @@ java {
 }
 
 repositories {
+	maven {
+		url = uri("file:\\${projectDir}\\..\\repo")
+	}
 	mavenCentral()
 }
 
@@ -72,7 +75,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-cache:3.4.3'
 // https://mvnrepository.com/artifact/redis.clients/jedis
 	implementation 'redis.clients:jedis:5.2.0'
-
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
+	implementation 'web.forum.core:core:0.0.1'
 
 
 
